@@ -6,15 +6,16 @@
     </head>
     <body>
         <p>Welcome to chat</p>
+        <ol id="messages"></ol>
+        <form id="messageForm">
+            <input type="text" placeholder="Message" name="message">
+            <button name="textMessage" id="myBtn">Submit</button> 
+        </form>
         <script src="/socket.io/socket.io.js"></script>
-        <script>
-           var socket=io();
-           socket.on("connect",()=>{
-console.log("HI I am client");
-           });
-           socket.on("disconnect",()=>{
-               console.log("Server gone");
-           });
-        </script>
+        <script src="js/index.js"></script>
+       <script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>   
     </body>
 </html>
