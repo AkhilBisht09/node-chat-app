@@ -20,8 +20,25 @@ document.getElementById("myBtn").addEventListener("click", function myFunction(e
         });
        
 });
+var locationButton=document.getElementById('sendLocation').addEventListener('click',function(e){
+    e.preventDefault();
+    if (!navigator.geolocation) {
+       console.log("geolocation not supported");
+    }
+    navigator.geolocation.getCurrentPosition(function(position){
+        socket.emit('createLocationMessage',{
+        latitude:position.coords.latitude,
+        longitude:position.coords.longitude
+        });
+    },function(){
+        alert("Unable to Fetch Location")});
+});
 
-
+socket.on("newLocationMessage",function (message){
+    var a=$('<a target="_blanck">My current location</a>').attr('href',message.url);
+    var li=$("<li></li>").text(`${message.from}: `).append(a);
+    li.appendTo('#messages');
+})
 // $('button').click(function(er){
 //   er.preventDefault();
 // socket.emit("createMessage",{

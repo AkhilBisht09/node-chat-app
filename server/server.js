@@ -4,7 +4,7 @@ const publicpath=path.join(__dirname,'../public');
 const socketio=require('socket.io');
 const express=require('express');
 const port=process.env.PORT || 3000;
-const {generateMessage}=require('./../public/js/utils/message');
+const {generateMessage,generateLocationMessage}=require('./../public/js/utils/message');
 var app=express();
 var server=http.createServer(app);
 var io=socketio(server);
@@ -18,6 +18,9 @@ io.on("connection",(socket)=>{
         io.emit("newMessage",generateMessage(message.from,message.text));
         callback("This is from admin"); 
     });
+    socket.on('createLocationMessage',(coords)=>{
+        io.emit('newLocationMessage',generateLocationMessage('Admin',coords.latitude,coords.longitude));
+    })
     socket.on("disconnect",()=>{
         console.log("User disconnected");
     });
