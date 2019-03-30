@@ -3,15 +3,24 @@
         <title>
             Chat
         </title>
+        <link href="css/styles.css" rel="stylesheet" type="text/css">
     </head>
-    <body>
-        <p>Welcome to chat</p>
-        <ol id="messages"></ol>
-        <form id="messageForm">
-            <input type="text" placeholder="Message" name="message">
-            <button name="textMessage" id="myBtn">Submit</button> 
-        </form>
-        <button id="sendLocation">Send Location</button>
+    <body class="chat">
+        <div class="chat__sidebar">
+            <h3>People</h3>
+            <div id="users"></div>
+        </div>
+        <div class="chat__main">
+        <ol id="messages" class="chat__messages"></ol>
+            <div class="chat__footer">
+                <form id="messageForm">
+                        <input type="text" placeholder="Message" name="message" autofocus autocomplete="off">
+                        <button name="textMessage" id="myBtn">Submit</button> 
+                </form>
+                    <button id="sendLocation">Send Location</button>
+            </div>
+        </div>
+        <script src="js/moment.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="js/index.js"></script>
        <script
