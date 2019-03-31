@@ -1,21 +1,54 @@
 var socket=io();
+
+function scrollToBottom(){
+var messages=$('#messages');
+var newmessage=messages.children('li:last-child');
+var clientHeight=messages.prop('clientHeight');
+var scrollHeight=messages.prop('scrollHeight');
+var scrollTop=messages.prop('scrollTop');
+if(scrollTop+clientHeight<=scrollHeight){
+    messages.scrollTop(scrollHeight);
+}
+};
 socket.on("connect",function (){
-console.log("HI I am client");
+var param=jQuery.deparam(window.location.search);
+socket.emit('join',param,function (err){
+    if(err){
+alert(err);
+window.location.href='/';
+    }
+    else{
+console.log('No error');
+    }
+});
 });
 socket.on("disconnect",function (){
     console.log("Server gone");
 });
+socket.on('updateUserList',function (users){
+var ol=jQuery('<ol></ol>');
+users.forEach(function(user){
+    ol.append(jQuery('<li></li>').text(user));
+});
+jQuery('#users').html(ol);
+});
+
 socket.on("newMessage",function(message){
     var formattedTime=moment(message.createdAt).format('h:mm a');
-    console.log("new meassage",message);
-    var li=$("<li></li>").text(`${message.from} ${formattedTime}:${message.text}`);
-    li.appendTo('#messages');
+    var template=$('#message-template').html();
+    var html=Mustache.render(template,{
+        text:message.text,
+        from:message.from,
+        createdAt:formattedTime
+    });
+    $('#messages').append(html);
+   scrollToBottom();
+    
 });
 document.getElementById("myBtn").addEventListener("click", function myFunction(e){
     e.preventDefault();
     var messageTextbox=$('[name=message]');
     socket.emit("createMessage",{
-        "from":"Bisht09@gmail.com",
         "text":messageTextbox.val()
         },function (data){
             messageTextbox.val("");
@@ -42,16 +75,12 @@ locationButton.addEventListener('click',function(e){
 
 socket.on("newLocationMessage",function (message){
     var formattedTime=moment(message.createdAt).format('h:mm a');
-    var a=$('<a target="_blanck">My current location</a>').attr('href',message.url);
-    var li=$("<li></li>").text(`${message.from} ${formattedTime}: `).append(a);
-    li.appendTo('#messages');
+    var template=$('#location-message-template').html();
+    var html=Mustache.render(template,{
+        url:message.url,
+        from:message.from,
+        createdAt:formattedTime
+    });
+    $('#messages').append(html);
+    scrollToBottom();
 });
-// $('button').click(function(er){
-//   er.preventDefault();
-// socket.emit("createMessage",{
-//     "from":"Bisht09@gmail.com",
-//     "text":$('[name=message]').val()
-//     },function (data){
-//         console.log("Got it",data);
-//     });
-// });
